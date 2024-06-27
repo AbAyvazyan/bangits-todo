@@ -21,3 +21,10 @@
     cursor: pointer;
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .todo {
+    width: 99%!important;
+    padding: 5px !important;
+  }
+}

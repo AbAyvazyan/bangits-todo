@@ -16,3 +16,10 @@
     }
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .panel {
+    width: 99%!important;
+    padding: 5px !important;
+  }
+}

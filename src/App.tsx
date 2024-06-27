@@ -7,7 +7,6 @@ import { routeType } from '@utils/types.ts';
 
 import './index.scss';
 
-
 const App = () => {
   return (
     <BrowserRouter>
@@ -21,7 +20,6 @@ const App = () => {
         </MainLayout>
       </Provider>
     </BrowserRouter>
-
   );
 };
 

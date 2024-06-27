@@ -7,18 +7,12 @@ const Header = () => {
       <nav>
         <ul>
           <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) => (isActive ? styles.activeLink : '')}
-            >
+            <NavLink to="/" className={({ isActive }) => (isActive ? styles.activeLink : '')}>
               Home
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/trash"
-              className={({ isActive }) => (isActive ? styles.activeLink : '')}
-            >
+            <NavLink to="/trash" className={({ isActive }) => (isActive ? styles.activeLink : '')}>
               Trash
             </NavLink>
           </li>

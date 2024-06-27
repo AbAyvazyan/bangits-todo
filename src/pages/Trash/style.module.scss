@@ -26,3 +26,12 @@
     }
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .trashHolder {
+    & > div {
+      width: 99% !important;
+      padding: 5px !important;
+    }
+  }
+}

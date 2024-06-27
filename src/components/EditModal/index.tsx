@@ -3,7 +3,16 @@ import { useAppDispatch } from '@app/store.ts';
 import { FormInputs, updateTodo } from '@features/todos.ts';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  Typography,
+} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import Input from '@components/Input';
 
@@ -13,47 +22,71 @@ interface EditTodoModalProps {
   todo: FormInputs;
 }
 
-const schema = yup.object({
-  title: yup.string().required('Title is required'),
-  description: yup.string(),
-  date: yup.date()
-    .required('Date is required')
-    .typeError('Invalid date')
-    .min(new Date(), 'Date cannot be in the past'),
-}).required();
+type TodoState = 'Pending' | 'Completed' | 'Overdue' | 'Removed';
+
+interface FormInputsSubmit {
+  title: string;
+  description?: string;
+  date: Date;
+  todoState: string;
+}
+
+const schema = yup
+  .object({
+    title: yup.string().required('Title is required'),
+    description: yup.string(),
+    date: yup
+      .date()
+      .required('Date is required')
+      .typeError('Invalid date')
+      .min(new Date(), 'Date cannot be in the past'),
+    todoState: yup
+      .string()
+      .required('Todo state is required')
+      .oneOf(['Pending', 'Completed', 'Overdue', 'Removed']),
+  })
+  .required();
 
 const EditTodoModal: React.FC<EditTodoModalProps> = ({ open, onClose, todo }) => {
   const dispatch = useAppDispatch();
-  const { control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
-    // @ts-ignore
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInputsSubmit>({
     resolver: yupResolver(schema),
     defaultValues: {
       title: todo.title,
       description: todo.description || '',
-      date: String(new Date(todo.date).toISOString().split('T')[0]),
-      todoState: todo.todoState,
+      date: new Date(todo.date),
+      todoState: todo.todoState as TodoState,
     },
   });
 
-  const handleSaveChanges = (data: FormInputs) => {
+  const handleSaveChanges = (data: FormInputsSubmit) => {
     const isoDate = new Date(data.date).toISOString();
-    data.id = todo.id;
-    dispatch(updateTodo({ ...data, date: isoDate }));
+    const updatedTodo = {
+      ...data,
+      date: isoDate,
+      id: todo.id,
+    };
+    dispatch(updateTodo(updatedTodo as FormInputs));
     onClose(); // Close the modal after saving changes
   };
-
   return (
     <Modal open={open} onClose={onClose}>
-      <Box sx={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 400,
-        bgcolor: 'background.paper',
-        boxShadow: 24,
-        p: 4,
-      }}>
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 4,
+        }}
+      >
         <Typography variant="h6" gutterBottom>
           Edit Todo
         </Typography>
@@ -94,11 +127,7 @@ const EditTodoModal: React.FC<EditTodoModalProps> = ({ open, onClose, todo }) =>
               name="todoState"
               control={control}
               render={({ field }) => (
-                <Select
-                  {...field}
-                  id="state"
-                  label="State"
-                >
+                <Select {...field} id="state" label="State">
                   <MenuItem value="Pending">Pending</MenuItem>
                   <MenuItem value="Completed">Completed</MenuItem>
                   <MenuItem value="Overdue">Overdue</MenuItem>

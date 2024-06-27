@@ -1,9 +1,10 @@
 import { useAppSelector } from '@app/store.ts';
 import { FormInputs } from '@features/todos.ts';
+import { formateDate } from '@utils/formatDate.ts';
 import styles from './style.module.scss';
 
 const Trash = () => {
-  const trash = useAppSelector(state => state.todos.trash);
+  const trash = useAppSelector((state) => state.todos.trash);
 
   return (
     <section className={styles.trash}>
@@ -16,7 +17,7 @@ const Trash = () => {
               <div>{item.title}</div>
               <div>{item.description}</div>
               <div>{item.todoState}</div>
-              <div>{item.date}</div>
+              <div>{formateDate(item.date)}</div>
             </div>
           );
         })}
